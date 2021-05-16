@@ -46,12 +46,15 @@ def on_message(client, userdata, msg):
 
 
 def colorString(string):
+
     if string in colorDict:
         string = colorDict[string] + string + colors.reset
     else:
         string = colors.fg.lightgrey + string + colors.reset
 
-    return '{:<25}'.format(string)
+
+    stringFormat = '{:<25}'
+    return stringFormat.format(string)
 
 
 client = mqtt.Client()
