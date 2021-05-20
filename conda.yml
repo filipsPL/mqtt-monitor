@@ -1,0 +1,11 @@
+name: mqttmonitor
+channels:
+  - conda-forge
+  - defaults
+  - main
+dependencies:
+  - conda
+  - python>3.7
+  - pandas
+  - tabulate
+  - paho-mqtt
