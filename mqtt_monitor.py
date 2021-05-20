@@ -15,6 +15,7 @@ import signal
 import sys
 
 import pandas as pd
+
 pd.set_option('display.max_columns', None)
 pd.set_option('max_colwidth', 30)
 pd.options.display.width = 0
@@ -23,7 +24,6 @@ from mqtt_conf import *
 
 maxlen = 5
 topicDict = {}
-
 
 
 def signal_handler(sig, frame):
@@ -72,11 +72,11 @@ def on_message(client, userdata, msg):
 
     topicSplit.extend([' '] * (maxlen - len(topicSplit)))
 
-    payload = colorString(str(msg.payload.decode("utf-8")))
+    payload = colorString(changeString(str(msg.payload.decode("utf-8"))))
 
     topicSplit.append(payload)
 
-    topicDict[msg.topic] = [ts] + [data] + [colorString(s) for s in topicSplit]
+    topicDict[msg.topic] = [ts] + [data] + [colorString(changeString(s)) for s in topicSplit]
 
     # final calculations on Pandas DataFrame
     toDisplayDf = pd.DataFrame.from_dict(topicDict, orient='index')
@@ -84,28 +84,24 @@ def on_message(client, userdata, msg):
     toDisplayDf["ago"] = toDisplayDf[0].apply(pretty_date)
     toDisplayDf = toDisplayDf.drop([0, 1], axis=1)
 
-
-    toDisplayDf = toDisplayDf.sort_index() # .drop([1], axis=1)
-
+    toDisplayDf = toDisplayDf.sort_index()  # .drop([1], axis=1)
 
     # .drop([1], axis=1).sort_index()
     # for key in topicDict:
     #     timeAgo = int(ts - topicDict[key][0])
     #     topicDictCopy[key] = [timeAgo] + topicDict[key]
 
-
     # toDisplay = topicDict
     # exit(1)
-    toDisplay = tabulate (toDisplayDf)
+    toDisplay = tabulate(toDisplayDf)
     cls()
 
     displayStatus()
 
     #print(topicDict)
     gotoxy(0, 3)
-    print ( toDisplay )
+    print(toDisplay)
     #print ( tabulate (topicDict) )
-
 
     # y = 0
     # for key in sorted(topicDict):
@@ -116,19 +112,25 @@ def on_message(client, userdata, msg):
 
 def displayStatus():
     gotoxy(0, 0)
-    print("Now is: {:%Y-%m-%d %H:%M:%S}\t Last update: {}\t Connected to: {}:{}".format(datetime.now(), pretty_date(ts), host, port))
+    print(
+        "Now is: {:%Y-%m-%d %H:%M:%S}\t Last update: {}\t Connected to: {}:{}".
+        format(datetime.now(), pretty_date(ts), host, port))
 
+
+def changeString(string):
+
+    if string in wordDict:
+        print (string)
+        string = wordDict[string]
+
+    return string
 
 
 def colorString(string):
 
     if string in colorDict:
         string = colorDict[string] + string + colors.reset
-    # else:
-    #     string = colors.fg.lightgrey + string + colors.reset
 
-    # stringFormat = '{:<25}'
-    # return stringFormat.format(string)
     return string
 
 
