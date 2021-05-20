@@ -9,6 +9,8 @@ from os import system, name
 from tabulate import tabulate
 #import arrow
 
+import signal
+import sys
 
 import pandas as pd
 pd.set_option('display.max_columns', None)
@@ -19,6 +21,12 @@ from mqtt_conf import *
 
 maxlen = 5
 topicDict = {}
+
+
+
+def signal_handler(sig, frame):
+    print('You pressed Ctrl+C!')
+    sys.exit(0)
 
 
 def gotoxy(x, y):
@@ -52,38 +60,40 @@ def on_message(client, userdata, msg):
     global topicDict
 
     data = [ "{:%Y-%m-%d %H:%M:%S}".format(datetime.now()) ]
+    ts = [datetime.now().timestamp()]
 
-    topicSplit = msg.topic.split("/") 
+    topicSplit = msg.topic.split("/")
 
     if len(topicSplit) > maxlen:
         maxlen = len(topicSplit)
 
     topicSplit.extend([' '] * (maxlen - len(topicSplit)))
 
-    # topicSplit = [colorString(s) for s in topicSplit]
-
-    #topicFormat = len(topicSplit) * '{:.<25}'
-    #topic = topicFormat.format(*topicSplit)
-    # topic = "".join(topicSplit)
-
     payload = colorString(str(msg.payload.decode("utf-8")))
-
-    # payload = str(msg.payload.decode("utf-8"))
-
-    # toPrint = "[{:%Y-%m-%d %H:%M:%S}] {:.<79}-> {}".format(
-    #     datetime.now(), topic, payload)
-
-    # topicDict[msg.topic] = toPrint
-
-    # topicIndex = list(topicDict).index(msg.topic)
-    # gotoxy(0,5+topicIndex)
-    # print(toPrint)
 
     topicSplit.append(payload)
 
-    topicDict[msg.topic] = data + [colorString(s) for s in topicSplit]
+    topicDict[msg.topic] = ts + data + [colorString(s) for s in topicSplit]
 
-    toDisplay = tabulate (pd.DataFrame.from_dict(topicDict,  orient='index').sort_index())
+    # final calculations on Pandas DataFrame
+    toDisplayDf = pd.DataFrame.from_dict(topicDict, orient='index')
+    toDisplayDf.insert(1, "ago", 0)
+    toDisplayDf["ago"] = toDisplayDf[0].apply(pretty_date)
+    toDisplayDf = toDisplayDf.drop([0, 1], axis=1)
+
+
+    toDisplayDf = toDisplayDf.sort_index() # .drop([1], axis=1)
+
+
+    # .drop([1], axis=1).sort_index()
+    # for key in topicDict:
+    #     timeAgo = int(ts - topicDict[key][0])
+    #     topicDictCopy[key] = [timeAgo] + topicDict[key]
+
+
+    # toDisplay = topicDict
+    # exit(1)
+    toDisplay = tabulate (toDisplayDf)
     cls()
 
     print("Last uppdate: {:%Y-%m-%d %H:%M:%S}".format(datetime.now()))
@@ -129,6 +139,9 @@ if __name__ == "__main__":
         client.tls_insecure_set(True)
 
     client.connect(host, port, 60)
+
+    signal.signal(signal.SIGINT, signal_handler)
+    print('Press Ctrl+C')
 
     # Blocking call that processes network traffic, dispatches callbacks and
     # handles reconnecting.

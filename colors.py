@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class colors:
     '''
     Colors class:reset all colors with colors.reset; two
@@ -41,3 +44,48 @@ class colors:
         purple = '\033[45m'
         cyan = '\033[46m'
         lightgrey = '\033[47m'
+
+
+
+class unicodeBalls():
+        green = '🟢 '
+        orange = '🟠 '
+        red = '🔴'
+        yellow = '🟡 '
+
+
+
+def pretty_date(time=False):
+    """
+    Based on https://stackoverflow.com/questions/1551382/user-friendly-time-format-in-python
+    with some modifications
+    """
+    diff = datetime.now().timestamp() - time
+
+
+
+    if diff < 86400:
+        if diff < 10:
+            return unicodeBalls.green + "just now"
+        if diff < 60:
+            return unicodeBalls.green +  str(round(diff)) + " seconds ago"
+        if diff < 120:
+            return unicodeBalls.green +  "a minute ago"
+        if diff < 3600:
+            return unicodeBalls.yellow +  str(round(diff / 60)) + " minutes ago"
+        if diff < 7200:
+            return unicodeBalls.yellow + "an hour ago"
+        if diff < 86400:
+            return unicodeBalls.red + str(round(diff / 3600)) + " hours ago"
+
+    day_diff = diff / 86400
+
+    if day_diff > 1 and day_diff < 1.5: # 1.5 days
+        return "Yesterday"
+    if day_diff < 7:
+        return str(round(day_diff)) + " days ago"
+    if day_diff < 31:
+        return str(round(day_diff / 7)) + " weeks ago"
+    if day_diff < 365:
+        return str(round(day_diff / 30)) + " months ago"
+    return str(round(day_diff / 365))    + " years ago"
