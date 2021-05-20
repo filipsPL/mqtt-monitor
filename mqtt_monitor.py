@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+from time import sleep
+
 import ssl
 import paho.mqtt.client as mqtt
 from os import system, name
@@ -58,9 +60,10 @@ def on_message(client, userdata, msg):
 
     global maxlen
     global topicDict
+    global ts
 
-    data = [ "{:%Y-%m-%d %H:%M:%S}".format(datetime.now()) ]
-    ts = [datetime.now().timestamp()]
+    data = "{:%Y-%m-%d %H:%M:%S}".format(datetime.now())
+    ts = datetime.now().timestamp()
 
     topicSplit = msg.topic.split("/")
 
@@ -73,7 +76,7 @@ def on_message(client, userdata, msg):
 
     topicSplit.append(payload)
 
-    topicDict[msg.topic] = ts + data + [colorString(s) for s in topicSplit]
+    topicDict[msg.topic] = [ts] + [data] + [colorString(s) for s in topicSplit]
 
     # final calculations on Pandas DataFrame
     toDisplayDf = pd.DataFrame.from_dict(topicDict, orient='index')
@@ -96,7 +99,7 @@ def on_message(client, userdata, msg):
     toDisplay = tabulate (toDisplayDf)
     cls()
 
-    print("Last uppdate: {:%Y-%m-%d %H:%M:%S}".format(datetime.now()))
+    displayStatus()
 
     #print(topicDict)
     gotoxy(0, 3)
@@ -109,6 +112,12 @@ def on_message(client, userdata, msg):
     #     y += 1
     #     gotoxy(0, 3 + y)
     #     print(topicDict[key])
+
+
+def displayStatus():
+    gotoxy(0, 0)
+    print("Now is: {:%Y-%m-%d %H:%M:%S}\t Last update: {}\t Connected to: {}:{}".format(datetime.now(), pretty_date(ts), host, port))
+
 
 
 def colorString(string):
@@ -124,6 +133,8 @@ def colorString(string):
 
 
 if __name__ == "__main__":
+
+    ts = datetime.now().timestamp()
 
     cls()
     gotoxy(0, 0)
@@ -147,4 +158,11 @@ if __name__ == "__main__":
     # handles reconnecting.
     # Other loop*() functions are available that give a threaded interface and a
     # manual interface.
-    client.loop_forever()
+
+    # client.loop_forever()
+
+    client.loop_start()
+
+    while True:
+        displayStatus()
+        sleep(1)
