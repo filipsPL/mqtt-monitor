@@ -131,4 +131,5 @@ dmypy.json
 # my stuff
 
 mqtt_conf.py
+mqtt_monitor.conf
 tests/
