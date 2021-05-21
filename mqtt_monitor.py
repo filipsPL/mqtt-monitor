@@ -6,10 +6,13 @@ from time import sleep
 
 import ssl
 import paho.mqtt.client as mqtt
-from os import system, name
+from os import system, name, path
+
+
+import argparse
+from configparser import ConfigParser
 
 from tabulate import tabulate
-#import arrow
 
 import signal
 import sys
@@ -134,9 +137,50 @@ def colorString(string):
     return string
 
 
+def parseArguments():
+    parser = argparse.ArgumentParser(
+        description='''Program for clustering data''',
+        add_help=True,
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        conflict_handler='resolve')
+
+
+    optional_arguments = parser.add_argument_group('Optional arguments')
+
+    optional_arguments.add_argument(
+        '--conf',
+        help='config file',
+        dest="configFile",
+    )
+
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
 
     ts = datetime.now().timestamp()
+
+
+    configFile = path.join(path.dirname(__file__), 'mqtt_monitor.conf')
+    print ("configFile", configFile)
+    config = ConfigParser()
+    config.read(configFile)
+
+    host = config['server']['host']
+    port = config['server']['port']
+    username = config['server']['username']
+    password = config['server']['password']
+    usessl = config['server']['usessl']
+
+    topics = config['topics']['topics']
+
+    wordDict = config._sections['tunables']
+    coloring = config._sections['coloring']
+
+    print(wordDict)
+
+    exit(1)
+    _ = parseArguments()
 
     cls()
     gotoxy(0, 0)
