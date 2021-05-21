@@ -11,6 +11,7 @@ from os import system, name, path
 
 import argparse
 from configparser import ConfigParser
+from ast import literal_eval
 
 from tabulate import tabulate
 
@@ -23,7 +24,7 @@ pd.set_option('display.max_columns', None)
 pd.set_option('max_colwidth', 30)
 pd.options.display.width = 0
 
-from mqtt_conf import *
+from colors import *
 
 maxlen = 5
 topicDict = {}
@@ -167,19 +168,21 @@ if __name__ == "__main__":
     config.read(configFile)
 
     host = config['server']['host']
-    port = config['server']['port']
+    port = int(config['server']['port'])
     username = config['server']['username']
     password = config['server']['password']
     usessl = config['server']['usessl']
 
-    topics = config['topics']['topics']
+    topics = [x.strip() for x in  config['topics']['topics'].split(',') ]
 
     wordDict = config._sections['tunables']
-    coloring = config._sections['coloring']
-
     print(wordDict)
 
-    exit(1)
+    colorDict = {}
+    for key in config._sections['coloring']:
+        colorDict[eval(key)] = eval(config._sections['coloring'][key])
+
+
     _ = parseArguments()
 
     cls()
