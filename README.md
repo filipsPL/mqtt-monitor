@@ -1,8 +1,12 @@
+mqtt_monitor
+======================
+
+
 <!-- TOC START min:1 max:6 link:true asterisk:false update:true -->
-- [About mqtt_monitor](#about-mqtt_monitor)
+- [About](#about)
 - [Installation](#installation)
-  - [With conda](#with-conda)
-  - [With pip](#with-pip)
+    - [Conda python environment](#conda-python-environment)
+    - [Set up with pip](#set-up-with-pip)
 - [Usage](#usage)
   - [Test server](#test-server)
   - [Set up your own config](#set-up-your-own-config)
@@ -10,9 +14,9 @@
 <!-- TOC END -->
 
 
-# About mqtt_monitor
+# About
 
-This is a simple mqtt topic monitor written in python 3. It allows you to subscribe and listen to a number of mqtt topics and display it in a form of table. Optionally it adds some colors to the presented data.
+This is a simple console mqtt topic monitor written in python 3. It allows you to subscribe and listen to a number of mqtt topics and display it in a form of table. Optionally it adds some eye-candies and colors to the presented data.
 
 ![screenshot](obrazki/README-88cf8fcc.png)
 
@@ -21,7 +25,7 @@ It was tested (under GitHub Actions CI/CD) and works under:
 - Python versions: 3.5, 3.8, and 3.9
 
 
-[![Python application](https://github.com/filipsPL/mqtt-monitor/actions/workflows/python-app.yml/badge.svg)](https://github.com/filipsPL/mqtt-monitor/actions/workflows/python-app.yml)
+CI Status: [![Python application](https://github.com/filipsPL/mqtt-monitor/actions/workflows/python-app.yml/badge.svg)](https://github.com/filipsPL/mqtt-monitor/actions/workflows/python-app.yml)
 
 
 
@@ -29,14 +33,14 @@ It was tested (under GitHub Actions CI/CD) and works under:
 
 `git clone git@github.com:filipsPL/mqtt-monitor.git`
 
-## With conda
+### Conda python environment
 
 ```
 conda env create -f conda.yml
 conda activate mqttmonitor
 ```
 
-## With pip
+### Set up with pip
 
 `pip install -r requirements.txt`
 
