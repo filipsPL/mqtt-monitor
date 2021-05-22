@@ -52,3 +52,4 @@ sensor2 = garden
 'p'= "☁ " + colors.fg.cyan
 'out'= colors.fg.red
 'in'= colors.fg.yellow
+'rssi'= '📶 ' + colors.fg.lightgrey
