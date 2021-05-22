@@ -94,7 +94,7 @@ def on_message(client, userdata, msg):
 
     toDisplayDf = toDisplayDf.sort_index()  # .drop([1], axis=1)
 
-    toDisplay = tabulate(toDisplayDf)
+    toDisplay = tabulate(toDisplayDf, showindex=showTopic, tablefmt=tableStyle)
     cls()
 
     displayStatus()
@@ -182,12 +182,15 @@ if __name__ == "__main__":
     port = int(config['server']['port'])
     username = config['server']['username']
     password = config['server']['password']
-    usessl = config['server']['usessl']
+    usessl = config.getboolean('server', 'usessl')
+
+    showTopic = config.getboolean('display', 'showTopic')
+    tableStyle = config['display']['tableStyle']
 
     topics = [x.strip() for x in config['topics']['topics'].split(',')]
     print(topics)
 
-    wordDict = config._sections['tunables']
+    wordDict = config._sections['replacements']
     print(wordDict)
     colorDict = {}
     for key in config._sections['coloring']:

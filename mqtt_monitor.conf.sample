@@ -12,7 +12,18 @@ username = rw
 password = readwrite
 
 # ssl
-usessl = True
+usessl = Yes
+
+[display]
+
+# show mqtt topic in the table?
+showTopic = No
+
+# table style
+# see: https://pypi.org/project/tabulate/
+# "plain" simple github grid fancy_grid pipe orgtbl jira... and more
+
+tableStyle = simple
 
 [topics]
 
@@ -22,7 +33,7 @@ usessl = True
 topics = jl2u90nbvcj/mqtt-monitor/#, slxlfippowa/mqtt-monitor/#, x8gwiazd/mqtt-monitor/#
 
 
-[tunables]
+[replacements]
 
 #
 # change given phrases
