@@ -8,10 +8,8 @@ import ssl
 import paho.mqtt.client as mqtt
 from os import system, name, path
 
-
 import argparse
 from configparser import ConfigParser
-from ast import literal_eval
 
 from tabulate import tabulate
 
@@ -28,6 +26,7 @@ from colors import *
 
 maxlen = 5
 topicDict = {}
+messages = 0
 
 
 def signal_handler(sig, frame):
@@ -56,6 +55,7 @@ def on_connect(client, userdata, flags, rc):
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     for topic in topics:
+        # print ("subscribing to", topic)
         client.subscribe(topic)
 
 
@@ -80,7 +80,9 @@ def on_message(client, userdata, msg):
 
     topicSplit.append(payload)
 
-    topicDict[msg.topic] = [ts] + [data] + [colorString(changeString(s)) for s in topicSplit]
+    topicDict[msg.topic] = [ts] + [data] + [
+        colorString(changeString(s)) for s in topicSplit
+    ]
 
     # final calculations on Pandas DataFrame
     toDisplayDf = pd.DataFrame.from_dict(topicDict, orient='index')
@@ -124,7 +126,7 @@ def displayStatus():
 def changeString(string):
 
     if string in wordDict:
-        print (string)
+        print(string)
         string = wordDict[string]
 
     return string
@@ -145,14 +147,12 @@ def parseArguments():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         conflict_handler='resolve')
 
-
     optional_arguments = parser.add_argument_group('Optional arguments')
 
-    optional_arguments.add_argument(
-        '--conf',
-        help='config file',
-        dest="configFile",
-    )
+    optional_arguments.add_argument('--conf',
+                                    help='config file',
+                                    dest="configFile",
+                                    default='')
 
     return parser.parse_args()
 
@@ -161,11 +161,29 @@ if __name__ == "__main__":
 
     ts = datetime.now().timestamp()
 
+    #
+    #  ---------------------------------- arguments ------------------------- #
+    #
 
-    configFile = path.join(path.dirname(__file__), 'mqtt_monitor.conf')
-    print ("configFile", configFile)
+    args = parseArguments()
+    configFile = args.configFile
+
+    #
+    #  ---------------------------------- CONFIG ------------------------- #
+    #
+
+    if configFile == "":
+        # config file path not provided
+        configFile = path.join(path.dirname(__file__), 'mqtt_monitor.conf')
+
+    print("configFile", configFile)
     config = ConfigParser()
-    config.read(configFile)
+
+    try:
+        config.read_file(open(configFile, "r"))
+    except:
+        print("Can't find config file in %s" % (configFile))
+        exit(2)
 
     host = config['server']['host']
     port = int(config['server']['port'])
@@ -173,7 +191,8 @@ if __name__ == "__main__":
     password = config['server']['password']
     usessl = config['server']['usessl']
 
-    topics = [x.strip() for x in  config['topics']['topics'].split(',') ]
+    topics = [x.strip() for x in config['topics']['topics'].split(',')]
+    print(topics)
 
     wordDict = config._sections['tunables']
     print(wordDict)
@@ -182,8 +201,9 @@ if __name__ == "__main__":
     for key in config._sections['coloring']:
         colorDict[eval(key)] = eval(config._sections['coloring'][key])
 
-
-    _ = parseArguments()
+    #
+    #  ---------------------------------- MAIN ------------------------- #
+    #
 
     cls()
     gotoxy(0, 0)
