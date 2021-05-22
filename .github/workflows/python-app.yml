@@ -31,4 +31,4 @@ jobs:
       run: |
         conda env list
         cd tests
-        ./mqtt_monitor.py --test
+        ./mqtt_monitor.py --conf mqtt_monitor.conf.sample  --test
