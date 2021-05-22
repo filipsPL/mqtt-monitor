@@ -20,7 +20,7 @@ This is a simple console mqtt topic monitor written in python 3. It allows you t
 
 ![screenshot](obrazki/README-88cf8fcc.png)
 
-It was tested (under GitHub Actions CI/CD) and works under:
+It was tested (with GitHub Actions CI/CD) and works under:
 - OS: Ubuntu, MacOS, and Windows
 - Python versions: 3.5, 3.8, and 3.9
 
