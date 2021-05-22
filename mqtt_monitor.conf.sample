@@ -19,7 +19,7 @@ usessl = True
 #
 # topics to subscribe, comma separated
 #
-topics = jL2u90NbvCJ/mqtt-monitor/#, sLxLFipPowA/mqtt-monitor/#, x8gwiazd/mqtt-monitor/#
+topics = jl2u90nbvcj/mqtt-monitor/#, slxlfippowa/mqtt-monitor/#, x8gwiazd/mqtt-monitor/#
 
 
 [tunables]
@@ -30,6 +30,9 @@ topics = jL2u90NbvCJ/mqtt-monitor/#, sLxLFipPowA/mqtt-monitor/#, x8gwiazd/mqtt-m
 
 sensor1 = home
 sensor2 = garden
+jl2u90nbvcj = berlin
+slxlfippowa = moscow
+x8gwiazd = warsaw
 
 #
 # dictionary of colors to highlight

@@ -30,7 +30,7 @@ messages = 0
 
 
 def signal_handler(sig, frame):
-    print('You pressed Ctrl+C!')
+    print("\n\n\nYou pressed Ctrl+C!\n\n\n")
     sys.exit(0)
 
 
@@ -94,28 +94,14 @@ def on_message(client, userdata, msg):
 
     toDisplayDf = toDisplayDf.sort_index()  # .drop([1], axis=1)
 
-    # .drop([1], axis=1).sort_index()
-    # for key in topicDict:
-    #     timeAgo = int(ts - topicDict[key][0])
-    #     topicDictCopy[key] = [timeAgo] + topicDict[key]
-
-    # toDisplay = topicDict
-    # exit(1)
     toDisplay = tabulate(toDisplayDf)
     cls()
 
     displayStatus()
 
-    #print(topicDict)
     gotoxy(0, 3)
     print(toDisplay)
-    #print ( tabulate (topicDict) )
 
-    # y = 0
-    # for key in sorted(topicDict):
-    #     y += 1
-    #     gotoxy(0, 3 + y)
-    #     print(topicDict[key])
 
 
 def displayStatus():
@@ -128,9 +114,7 @@ def displayStatus():
 def changeString(string):
 
     if string in wordDict:
-        print(string)
         string = wordDict[string]
-
     return string
 
 
@@ -205,7 +189,6 @@ if __name__ == "__main__":
 
     wordDict = config._sections['tunables']
     print(wordDict)
-
     colorDict = {}
     for key in config._sections['coloring']:
         colorDict[eval(key)] = eval(config._sections['coloring'][key])
@@ -230,7 +213,7 @@ if __name__ == "__main__":
     client.connect(host, port, 60)
 
     signal.signal(signal.SIGINT, signal_handler)
-    print('Press Ctrl+C')
+    print("Press Ctrl+C")
 
     # Blocking call that processes network traffic, dispatches callbacks and
     # handles reconnecting.
