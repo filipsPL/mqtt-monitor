@@ -1,0 +1,54 @@
+[server]
+
+#
+# server host and port
+#
+
+host = test.mosquitto.org
+port = 8883
+
+# login data
+username = rw
+password = readwrite
+
+# ssl
+usessl = True
+
+[topics]
+
+#
+# topics to subscribe, comma separated
+#
+topics = jL2u90NbvCJ/mqtt-monitor/#, sLxLFipPowA/mqtt-monitor/#, x8gwiazd/mqtt-monitor/#
+
+
+[tunables]
+
+#
+# change given phrases
+#
+
+sensor1 = home
+sensor2 = garden
+
+#
+# dictionary of colors to highlight
+#
+
+[coloring]
+'pi'= colors.fg.pink
+'home'= '🏠' + colors.fg.orange
+'garden'= '🌳' + colors.fg.pink
+'ready'= unicodeBalls.green + colors.bg.green
+'offline'= unicodeBalls.red + colors.bg.red
+'failed'= unicodeBalls.red + colors.bg.red
+'ok'= unicodeBalls.green + colors.bg.green
+'scanning'= unicodeBalls.orange + colors.bg.orange
+'status'= colors.bold
+'wifi'= colors.fg.lightcyan
+'wifi-probe'= colors.fg.cyan
+'temp'= '🌡 ' + colors.fg.pink
+'hum'= '💧' + colors.fg.orange
+'p'= "☁ " + colors.fg.cyan
+'out'= colors.fg.red
+'in'= colors.fg.yellow
