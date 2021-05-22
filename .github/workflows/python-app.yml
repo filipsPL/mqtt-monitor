@@ -29,5 +29,4 @@ jobs:
     - name: run test
        shell: pwsh
        run: |
-       ./mqtt_monitor.py --test
-          
+        ./mqtt_monitor.py --test
