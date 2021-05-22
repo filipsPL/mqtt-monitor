@@ -65,9 +65,11 @@ def on_message(client, userdata, msg):
     global maxlen
     global topicDict
     global ts
+    global messages
 
     data = "{:%Y-%m-%d %H:%M:%S}".format(datetime.now())
     ts = datetime.now().timestamp()
+    messages += 1
 
     topicSplit = msg.topic.split("/")
 
@@ -119,8 +121,8 @@ def on_message(client, userdata, msg):
 def displayStatus():
     gotoxy(0, 0)
     print(
-        "Now is: {:%Y-%m-%d %H:%M:%S}\t Last update: {}\t Connected to: {}:{}".
-        format(datetime.now(), pretty_date(ts), host, port))
+        "Now is: {:%Y-%m-%d %H:%M:%S}\t Last update: {}\tMessages received: {} | Connected to: {}:{}".
+        format(datetime.now(), pretty_date(ts), messages, host, port))
 
 
 def changeString(string):
@@ -154,6 +156,11 @@ def parseArguments():
                                     dest="configFile",
                                     default='')
 
+    optional_arguments.add_argument('--test',
+                                    help='perform tests',
+                                    dest="performTest",
+                                    action='store_true')
+
     return parser.parse_args()
 
 
@@ -167,6 +174,8 @@ if __name__ == "__main__":
 
     args = parseArguments()
     configFile = args.configFile
+    performTest = args.performTest
+
 
     #
     #  ---------------------------------- CONFIG ------------------------- #
@@ -232,6 +241,15 @@ if __name__ == "__main__":
 
     client.loop_start()
 
-    while True:
+    continueLoop = True
+    while continueLoop:
         displayStatus()
+
+        # check if we are in a test mode:
+        if performTest:
+            # if received at least 3 messages or it took longer than 30 seconds
+            if messages > 4 or (datetime.now().timestamp() - ts > 30):
+                print (colors.fg.green + "Test passed!" + colors.reset)
+                exit(0)
+
         sleep(1)
