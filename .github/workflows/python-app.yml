@@ -29,6 +29,4 @@ jobs:
     - name: run test
       shell: pwsh
       run: |
-        conda env list
-        cd tests
         ./mqtt_monitor.py --conf mqtt_monitor.conf.sample  --test
