@@ -47,11 +47,25 @@ class colors:
 
 
 
-class unicodeBalls():
+class unicodeChar():
+    class balls:
         green = '🟢 '
         orange = '🟠 '
         red = '🔴'
         yellow = '🟡 '
+        blue = '🔵'
+        brown = '🟤 '
+        white = '⚪'
+        purple = '🟣 '
+        empty = '⭕️'
+        noentry = '⛔'
+    class squares:
+        green = '🟩 '
+        orange = '🟧 '
+        red = '🟥 '
+        yellow = '🟨 '
+        purple = '🟪 '
+        blue = '🟦 '
 
 
 
@@ -66,26 +80,26 @@ def pretty_date(time=False):
 
     if diff < 86400:
         if diff < 10:
-            return unicodeBalls.green + "just now"
+            return unicodeChar.balls.green + "just now"
         if diff < 60:
-            return unicodeBalls.green +  str(round(diff)) + " seconds ago"
+            return unicodeChar.squares.green +  str(round(diff)) + " seconds ago"
         if diff < 120:
-            return unicodeBalls.green +  "a minute ago"
+            return unicodeChar.balls.blue +  "a minute ago"
         if diff < 3600:
-            return unicodeBalls.yellow +  str(round(diff / 60)) + " minutes ago"
+            return unicodeChar.balls.yellow +  str(round(diff / 60)) + " minutes ago"
         if diff < 7200:
-            return unicodeBalls.yellow + "an hour ago"
+            return unicodeChar.balls.orange + "an hour ago"
         if diff < 86400:
-            return unicodeBalls.red + str(round(diff / 3600)) + " hours ago"
+            return unicodeChar.balls.red + str(round(diff / 3600)) + " hours ago"
 
     day_diff = diff / 86400
 
     if day_diff > 1 and day_diff < 1.5: # 1.5 days
-        return "Yesterday"
+        return unicodeChar.balls.empty + "Yesterday"
     if day_diff < 7:
-        return str(round(day_diff)) + " days ago"
+        return unicodeChar.balls.noentry + str(round(day_diff)) + " days ago"
     if day_diff < 31:
-        return str(round(day_diff / 7)) + " weeks ago"
+        return unicodeChar.balls.noentry + str(round(day_diff / 7)) + " weeks ago"
     if day_diff < 365:
         return str(round(day_diff / 30)) + " months ago"
-    return str(round(day_diff / 365))    + " years ago"
+    return unicodeChar.balls.noentry + str(round(day_diff / 365))    + " years ago"
