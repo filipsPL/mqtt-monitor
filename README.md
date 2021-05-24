@@ -1,4 +1,4 @@
-mqtt_monitor
+console mqtt_monitor
 ======================
 
 
@@ -18,7 +18,7 @@ mqtt_monitor
 
 This is a simple console mqtt topic monitor written in python 3. It allows you to subscribe and listen to a number of mqtt topics and display it in a form of table. Optionally it adds some eye-candies and colors to the presented data.
 
-![screenshot](obrazki/README-88cf8fcc.png)
+![](obrazki/README-1de557a3.png)
 
 It was tested (with GitHub Actions CI/CD) and works under:
 - OS: Ubuntu, MacOS, and Windows
@@ -64,4 +64,4 @@ Connect to the test server and wait for messages:
 
 See the monitor in action:
 
-[![asciicast](https://asciinema.org/a/mzgmn185M2SLa2caatQ8CRNrP.svg)](https://asciinema.org/a/mzgmn185M2SLa2caatQ8CRNrP)
+[![asciicast](https://asciinema.org/a/draxv7tXsFxQuf5QkGMtF1PvG.svg)](https://asciinema.org/a/draxv7tXsFxQuf5QkGMtF1PvG)
