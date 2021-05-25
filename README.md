@@ -64,4 +64,4 @@ Connect to the test server and wait for messages:
 
 See the monitor in action:
 
-[![asciicast](https://asciinema.org/a/draxv7tXsFxQuf5QkGMtF1PvG.svg)](https://asciinema.org/a/draxv7tXsFxQuf5QkGMtF1PvG)
+[![asciicast](https://asciinema.org/a/emHhmWkkbyLIGC8CpPD7xwZBu.svg)](https://asciinema.org/a/emHhmWkkbyLIGC8CpPD7xwZBu)
