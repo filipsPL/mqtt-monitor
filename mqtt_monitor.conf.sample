@@ -25,6 +25,11 @@ showTopic = No
 
 tableStyle = simple
 
+# file to save data to, instead of displaying
+# if not set, tables are displayed in console
+# saveTo = /dev/shm/mqtt_monitor.txt
+
+
 [topics]
 
 #

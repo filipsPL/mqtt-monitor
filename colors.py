@@ -103,3 +103,9 @@ def pretty_date(time=False):
     if day_diff < 365:
         return str(round(day_diff / 30)) + " months ago"
     return unicodeChar.balls.noentry + str(round(day_diff / 365))    + " years ago"
+
+
+def saveToFile(buffer, filename):
+    text_file=open(filename,"w")
+    text_file.write(buffer)
+    text_file.close()
