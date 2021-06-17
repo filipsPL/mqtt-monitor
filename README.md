@@ -4,6 +4,7 @@ console mqtt_monitor
 
 <!-- TOC START min:1 max:6 link:true asterisk:false update:true -->
 - [About](#about)
+  - [Features](#features)
 - [Installation](#installation)
     - [Conda python environment](#conda-python-environment)
     - [Set up with pip](#set-up-with-pip)
@@ -28,6 +29,19 @@ It was tested (with GitHub Actions CI/CD) and works under:
 CI Status: [![Python application](https://github.com/filipsPL/mqtt-monitor/actions/workflows/python-app.yml/badge.svg)](https://github.com/filipsPL/mqtt-monitor/actions/workflows/python-app.yml)
 
 
+## Features
+
+- runs in console
+- 100% python
+- multiple topic subscription
+- custom colors and unicode icons for a given keywords:
+
+![](obrazki/README-cd1710ec.png)
+
+- sort by the topic
+- window/tab title in gnome/KDE:
+
+![](obrazki/README-b4260277.png)
 
 # Installation
 
