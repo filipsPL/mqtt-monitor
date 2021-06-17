@@ -28,9 +28,9 @@ maxlen = 5
 topicDict = {}
 messages = 0
 
-
 def signal_handler(sig, frame):
     print("\n\n\nYou pressed Ctrl+C!\n\n\n")
+    gotoxy(0, 80)
     sys.exit(0)
 
 
@@ -95,20 +95,36 @@ def on_message(client, userdata, msg):
     toDisplayDf = toDisplayDf.sort_index()  # .drop([1], axis=1)
 
     toDisplay = tabulate(toDisplayDf, showindex=showTopic, tablefmt=tableStyle)
-    cls()
 
-    displayStatus()
-
-    gotoxy(0, 3)
-    print(toDisplay)
+    if saveTo:
+        # we are writing to file
+        saveToFile(toDisplay, saveTo)
+    else:
+        # we are displaying
+        cls()
+        displayStatus()
+        gotoxy(0, 3)
+        print(toDisplay)
 
 
 
 def displayStatus():
+    uptime = ts - timeStart
+
+    # messages per second
+    if messages > 0:
+        pckgs = messages/uptime
+    else:
+        pckgs = 0
+
     gotoxy(0, 0)
     print(
-        "Now is: {:%Y-%m-%d %H:%M:%S}\t Last update: {}\tMessages received: {} | Connected to: {}:{}".
-        format(datetime.now(), pretty_date(ts), messages, host, port))
+        "Now is: {:%Y-%m-%d %H:%M:%S}\t Last update: {}\tMessages received: {} ({:.2f} msg/s)| Connected to: {}:{}".
+        format(datetime.now(), pretty_date(ts), messages, pckgs, host, port))
+
+    # console window title
+    consoleTitle = "{}:{} | {} | {} msgs |".format(host, port, pretty_date(ts), messages)
+    print('\33]0;%s\a' % (consoleTitle), end='', flush=True)
 
 
 def changeString(string):
@@ -151,6 +167,7 @@ def parseArguments():
 if __name__ == "__main__":
 
     ts = datetime.now().timestamp()
+    timeStart = ts
 
     #
     #  ---------------------------------- arguments ------------------------- #
@@ -186,6 +203,11 @@ if __name__ == "__main__":
 
     showTopic = config.getboolean('display', 'showTopic')
     tableStyle = config['display']['tableStyle']
+
+    if config.has_option('display', 'saveTo'):
+        saveTo = config['display']['saveTo']
+    else:
+        saveTo = False
 
     topics = [x.strip() for x in config['topics']['topics'].split(',')]
     print(topics)
@@ -223,19 +245,23 @@ if __name__ == "__main__":
     # Other loop*() functions are available that give a threaded interface and a
     # manual interface.
 
-    # client.loop_forever()
 
-    client.loop_start()
+    if saveTo:
+        # no need for the interface
+        client.loop_forever()
 
-    continueLoop = True
-    while continueLoop:
-        displayStatus()
+    else:
+        # GUI console interface
+        client.loop_start()
+        continueLoop = True
+        while continueLoop:
+            displayStatus()
 
-        # check if we are in a test mode:
-        if performTest:
-            # if received at least 3 messages or it took longer than 30 seconds
-            if messages > 4 or (datetime.now().timestamp() - ts > 30):
-                print (colors.fg.green + "Test passed!" + colors.reset)
-                exit(0)
+            # check if we are in a test mode:
+            if performTest:
+                # if received at least 3 messages or it took longer than 30 seconds
+                if messages > 4 or (datetime.now().timestamp() - ts > 30):
+                    print (colors.fg.green + "Test passed!" + colors.reset)
+                    exit(0)
 
-        sleep(1)
+            sleep(1)
