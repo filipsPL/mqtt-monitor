@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 
 
 class colors:
@@ -67,6 +68,10 @@ class unicodeChar():
         purple = '🟪 '
         blue = '🟦 '
 
+
+def removeAnsii(string):
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    return ansi_escape.sub('', string)
 
 
 def pretty_date(time=False):
