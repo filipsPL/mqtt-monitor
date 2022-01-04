@@ -30,6 +30,10 @@ tableStyle = simple
 # saveTo = /dev/shm/mqtt_monitor.txt
 
 
+# shall we add an ansii reset-to-default-color code at the end of string?
+# Yes for console display, no for file saving (most probably)
+addResetColor = Yes
+
 [topics]
 
 #

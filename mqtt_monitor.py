@@ -137,7 +137,7 @@ def changeString(string):
 def colorString(string):
 
     if string in colorDict:
-        string = colorDict[string] + string + colors.reset
+        string = colorDict[string] + string + resetColor
 
     return string
 
@@ -204,6 +204,13 @@ if __name__ == "__main__":
     showTopic = config.getboolean('display', 'showTopic')
     tableStyle = config['display']['tableStyle']
 
+    addResetColor = config.getboolean('display', 'addResetColor')
+
+    if addResetColor:
+        resetColor = colors.reset
+    else:
+        resetColor = ""
+
     if config.has_option('display', 'saveTo'):
         saveTo = config['display']['saveTo']
     else:
@@ -213,10 +220,18 @@ if __name__ == "__main__":
     print(topics)
 
     wordDict = config._sections['replacements']
-    print(wordDict)
+
     colorDict = {}
-    for key in config._sections['coloring']:
-        colorDict[eval(key)] = eval(config._sections['coloring'][key])
+
+    if not saveTo:
+        for key in config._sections['coloring']:
+            colorDict[eval(key)] = eval(config._sections['coloring'][key])
+    else:
+        for key in config._sections['coloring']:
+            colorDict[eval(key)] = removeAnsii(eval(config._sections['coloring'][key]))
+
+
+
 
     #
     #  ---------------------------------- MAIN ------------------------- #
@@ -261,7 +276,7 @@ if __name__ == "__main__":
             if performTest:
                 # if received at least 3 messages or it took longer than 30 seconds
                 if messages > 4 or (datetime.now().timestamp() - ts > 30):
-                    print (colors.fg.green + "Test passed!" + colors.reset)
+                    print (colors.fg.green + "Test passed!" + resetColor)
                     exit(0)
 
             sleep(1)
