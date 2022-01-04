@@ -28,6 +28,7 @@ maxlen = 5
 topicDict = {}
 messages = 0
 
+
 def signal_handler(sig, frame):
     print("\n\n\nYou pressed Ctrl+C!\n\n\n")
     gotoxy(0, 80)
@@ -94,7 +95,7 @@ def on_message(client, userdata, msg):
 
     toDisplayDf = toDisplayDf.sort_index()  # .drop([1], axis=1)
 
-    toDisplay = tabulate(toDisplayDf, showindex=showTopic, tablefmt=tableStyle)
+    toDisplay = headerFileText + tabulate(toDisplayDf, showindex=showTopic, tablefmt=tableStyle) + footerFileText
 
     if saveTo:
         # we are writing to file
@@ -107,23 +108,23 @@ def on_message(client, userdata, msg):
         print(toDisplay)
 
 
-
 def displayStatus():
     uptime = ts - timeStart
 
     # messages per second
     if messages > 0:
-        pckgs = messages/uptime
+        pckgs = messages / uptime
     else:
         pckgs = 0
 
     gotoxy(0, 0)
     print(
-        "Now is: {:%Y-%m-%d %H:%M:%S}\t Last update: {}\tMessages received: {} ({:.2f} msg/s)| Connected to: {}:{}".
-        format(datetime.now(), pretty_date(ts), messages, pckgs, host, port))
+        "Now is: {:%Y-%m-%d %H:%M:%S}\t Last update: {}\tMessages received: {} ({:.2f} msg/s)| Connected to: {}:{}"
+        .format(datetime.now(), pretty_date(ts), messages, pckgs, host, port))
 
     # console window title
-    consoleTitle = "{}:{} | {} | {} msgs |".format(host, port, pretty_date(ts), messages)
+    consoleTitle = "{}:{} | {} | {} msgs |".format(host, port, pretty_date(ts),
+                                                   messages)
     print('\33]0;%s\a' % (consoleTitle), end='', flush=True)
 
 
@@ -132,6 +133,13 @@ def changeString(string):
     if string in wordDict:
         string = wordDict[string]
     return string
+
+
+def file_read(filename):
+    f = open(filename, 'r')
+    content = f.read()
+    f.close()
+    return content
 
 
 def colorString(string):
@@ -177,7 +185,6 @@ if __name__ == "__main__":
     configFile = args.configFile
     performTest = args.performTest
 
-
     #
     #  ---------------------------------- CONFIG ------------------------- #
     #
@@ -216,6 +223,19 @@ if __name__ == "__main__":
     else:
         saveTo = False
 
+    # header and footer files
+    if config.has_option('display', 'headerFile'):
+        headerFileText = file_read(config['display']['headerFile'])
+    else:
+        headerFileText = ""
+
+    if config.has_option('display', 'footerFile'):
+        footerFileText = file_read(config['display']['footerFile'])
+    else:
+        footerFileText = ""
+
+
+
     topics = [x.strip() for x in config['topics']['topics'].split(',')]
     print(topics)
 
@@ -228,10 +248,8 @@ if __name__ == "__main__":
             colorDict[eval(key)] = eval(config._sections['coloring'][key])
     else:
         for key in config._sections['coloring']:
-            colorDict[eval(key)] = removeAnsii(eval(config._sections['coloring'][key]))
-
-
-
+            colorDict[eval(key)] = removeAnsii(
+                eval(config._sections['coloring'][key]))
 
     #
     #  ---------------------------------- MAIN ------------------------- #
@@ -260,7 +278,6 @@ if __name__ == "__main__":
     # Other loop*() functions are available that give a threaded interface and a
     # manual interface.
 
-
     if saveTo:
         # no need for the interface
         client.loop_forever()
@@ -276,7 +293,7 @@ if __name__ == "__main__":
             if performTest:
                 # if received at least 3 messages or it took longer than 30 seconds
                 if messages > 4 or (datetime.now().timestamp() - ts > 30):
-                    print (colors.fg.green + "Test passed!" + resetColor)
+                    print(colors.fg.green + "Test passed!" + resetColor)
                     exit(0)
 
             sleep(1)

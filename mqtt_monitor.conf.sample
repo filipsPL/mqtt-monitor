@@ -34,6 +34,13 @@ tableStyle = simple
 # Yes for console display, no for file saving (most probably)
 addResetColor = Yes
 
+# add this header and footer to the output
+# for example text logo or header or html invocation
+# headerFile=header.txt
+# footerFile=footer.txt
+
+
+
 [topics]
 
 #
